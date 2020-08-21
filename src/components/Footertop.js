@@ -1,7 +1,48 @@
 import React, {Component} from 'react'
 
 class Footertop extends Component{
+    constructor(props) {
+        super(props)
+        this.state = {
+            username: '',
+            email: '',
+            subject: '',
+            message: '',
+            showerror: false,
+            showsuccess: false
+        }
+    }
+    changeHandler = (event) => {
+        let nam = event.target.name
+        let val = event.target.value
+        this.setState({
+            [nam] : val
+        });
+    }
+    submitHandler = (event) => {
+        event.preventDefault()
+        let username = this.state.username
+        let email = this.state.email
+        let count = 0
+        if(username === '' || email === ''){
+            count++
+        }
+        if(count > 0){
+            this.setState({
+                errormessage: 'You need to fill up data',
+                showerror: true
+            });
+        }else{
+            this.setState({
+                successmessage: 'Your message has been sent. Thank you!',
+                showerror: false,
+                showsuccess: true
+            })
+        }
+    }
     render() {
+        const styleError = this.state.showerror ? {display: 'block'} : {display: 'none'}
+        const styleSuccess = this.state.showsuccess ? {display: 'block'} : {display: 'none'}
         return(
             <div class="footer-top">
                 <div class="container">
@@ -72,26 +113,26 @@ class Footertop extends Component{
                         
                         <h4>Send us a message</h4>
                         <p>Eos ipsa est voluptates. Nostrum nam libero ipsa vero. Debitis quasi sit eaque numquam similique commodi harum aut temporibus.</p>
-                        <form action="" method="post" role="form" class="contactForm">
+                        <form class="contactForm" onSubmit={this.submitHandler}>
                             <div class="form-group">
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+                            <input type="text" value={this.state.username} onChange={this.changeHandler} name="username" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
                             <div class="validation"></div>
                             </div>
                             <div class="form-group">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+                            <input type="email" value={this.state.email} onChange={this.changeHandler} class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
                             <div class="validation"></div>
                             </div>
                             <div class="form-group">
-                            <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+                            <input type="text" value={this.state.subject} onChange={this.changeHandler} class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
                             <div class="validation"></div>
                             </div>
                             <div class="form-group">
-                            <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+                            <textarea value={this.state.message} onChange={this.changeHandler} class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
                             <div class="validation"></div>
                             </div>
 
-                            <div id="sendmessage">Your message has been sent. Thank you!</div>
-                            <div id="errormessage"></div>
+                            <div id="sendmessage" style={styleSuccess}>{this.state.successmessage}</div>
+                            <div id="errormessage" style={styleError}>{this.state.errormessage}</div>
 
                             <div class="text-center"><button type="submit" title="Send Message">Send Message</button></div>
                         </form>
